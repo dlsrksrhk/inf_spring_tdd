@@ -23,13 +23,13 @@ class UserRepositoryTest {
 
     @Test
     void findByIdAndStatus_테스트() {
-        Optional<UserEntity> finedEntity = userRepository.findByIdAndStatus(1L, UserStatus.ACTIVE);
+        Optional<UserEntity> finedEntity = userRepository.findByIdAndStatus(1000L, UserStatus.ACTIVE);
         assertThat(finedEntity.isPresent()).isTrue();
     }
 
     @Test
     void findByIdAndStatus_조회_안되면_Optional_empty_테스트() {
-        Optional<UserEntity> finedEntity = userRepository.findByIdAndStatus(1L, UserStatus.PENDING);
+        Optional<UserEntity> finedEntity = userRepository.findByIdAndStatus(1000L, UserStatus.PENDING);
         assertThat(finedEntity.isEmpty()).isTrue();
     }
 
