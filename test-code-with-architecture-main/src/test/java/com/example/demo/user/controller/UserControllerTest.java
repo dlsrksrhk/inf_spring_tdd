@@ -1,7 +1,7 @@
 package com.example.demo.user.controller;
 
 import com.example.demo.user.domain.UserUpdate;
-import com.example.demo.user.infrastructure.UserRepository;
+import com.example.demo.user.infrastructure.UserJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -64,7 +64,7 @@ class UserControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("http://localhost:3000"));
 
-        userRepository.findById(1001L)
+        userJpaRepository.findById(1001L)
                 .ifPresent(userEntity -> {
                     assertEquals("ACTIVE", userEntity.getStatus().name());
                     assertEquals(1001L, userEntity.getId());

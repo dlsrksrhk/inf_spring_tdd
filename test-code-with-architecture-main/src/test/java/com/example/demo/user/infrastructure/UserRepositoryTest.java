@@ -20,29 +20,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Test
     void findByIdAndStatus_테스트() {
-        Optional<UserEntity> finedEntity = userRepository.findByIdAndStatus(1000L, UserStatus.ACTIVE);
+        Optional<UserEntity> finedEntity = userJpaRepository.findByIdAndStatus(1000L, UserStatus.ACTIVE);
         assertThat(finedEntity.isPresent()).isTrue();
     }
 
     @Test
     void findByIdAndStatus_조회_안되면_Optional_empty_테스트() {
-        Optional<UserEntity> finedEntity = userRepository.findByIdAndStatus(1000L, UserStatus.PENDING);
+        Optional<UserEntity> finedEntity = userJpaRepository.findByIdAndStatus(1000L, UserStatus.PENDING);
         assertThat(finedEntity.isEmpty()).isTrue();
     }
 
     @Test
     void findByEmailAndStatus_테스트() {
-        Optional<UserEntity> finedEntity = userRepository.findByEmailAndStatus("test@naver.com", UserStatus.ACTIVE);
+        Optional<UserEntity> finedEntity = userJpaRepository.findByEmailAndStatus("test@naver.com", UserStatus.ACTIVE);
         assertThat(finedEntity.isPresent()).isTrue();
     }
 
     @Test
     void findByEmailAndStatus_조회_안되면_Optional_empty_테스트() {
-        Optional<UserEntity> finedEntity = userRepository.findByEmailAndStatus("test@naver.com", UserStatus.PENDING);
+        Optional<UserEntity> finedEntity = userJpaRepository.findByEmailAndStatus("test@naver.com", UserStatus.PENDING);
         assertThat(finedEntity.isEmpty()).isTrue();
     }
 }
