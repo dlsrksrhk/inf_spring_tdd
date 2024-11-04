@@ -118,7 +118,7 @@ class UserServiceTest {
 
     @Test
     void 인증코드가_맞지않으면_인증에_실패하고_예외가발생한다() {
-        assertThatThrownBy(()->userService.verifyEmail(1001L, "xxxxx-aaaaa-aaaaaaab"))
+        assertThatThrownBy(() -> userService.verifyEmail(1001L, "xxxxx-aaaaa-aaaaaaab"))
                 .isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 
