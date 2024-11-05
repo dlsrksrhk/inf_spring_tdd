@@ -1,5 +1,6 @@
 package com.example.demo.post.domain;
 
+import com.example.demo.mock.TestClockHolder;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class PostTest {
                 .content("content")
                 .build();
         //when
-        Post post = Post.from(writer, postCreate);
+        Post post = Post.from(writer, postCreate, new TestClockHolder(1698765432L));
 
         //then
         assertThat(post.getWriter().getEmail()).isEqualTo("test@naver.com");
@@ -32,6 +33,7 @@ class PostTest {
         assertThat(post.getWriter().getStatus()).isEqualTo(UserStatus.ACTIVE);
         assertThat(post.getWriter().getCertificationCode()).isEqualTo("aaaaa-aaaaa-aaaaaaaa");
         assertThat(post.getContent()).isEqualTo("content");
+        assertThat(post.getCreatedAt()).isEqualTo(1698765432L);
     }
 
     @Test
@@ -45,10 +47,11 @@ class PostTest {
                 .content("old content")
                 .build();
 
-        Post updatedPost = post.update(postUpdate);
+        Post updatedPost = post.update(postUpdate, new TestClockHolder(1698765432L));
 
         //then
         assertThat(updatedPost.getContent()).isEqualTo("new content");
+        assertThat(updatedPost.getModifiedAt()).isEqualTo(1698765432L);
     }
 
 }

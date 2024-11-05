@@ -30,7 +30,7 @@ class UserServiceTest {
     private UserService userService;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         FakeMailSender fakeMailSender = new FakeMailSender();
         FakeUserRepository userRepository = new FakeUserRepository();
 
