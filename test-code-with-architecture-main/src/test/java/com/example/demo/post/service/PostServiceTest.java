@@ -1,9 +1,9 @@
 package com.example.demo.post.service;
 
+import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
-import com.example.demo.post.infrastructure.PostEntity;
-import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,6 @@ import org.springframework.test.context.jdbc.SqlGroup;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @SqlGroup({
@@ -27,7 +26,7 @@ class PostServiceTest {
     @Test
     void getById은_게시글을_가져온다() {
         Long id = 1000L;
-        PostEntity result = postService.getById(id);
+        Post result = postService.getById(id);
         assertThat(result.getId()).isEqualTo(id);
     }
 
@@ -45,7 +44,7 @@ class PostServiceTest {
                 .writerId(1000L)
                 .build();
 
-        PostEntity result = postService.create(postCreate);
+        Post result = postService.create(postCreate);
 
         assertThat(result.getId()).isNotNull();
         assertThat(result.getContent()).isEqualTo(postCreate.getContent());
@@ -58,7 +57,7 @@ class PostServiceTest {
                 .content("update content")
                 .build();
 
-        PostEntity result = postService.update(1000L, postUpdate);
+        Post result = postService.update(1000L, postUpdate);
 
         assertThat(result.getId()).isNotNull();
         assertThat(result.getContent()).isEqualTo(postUpdate.getContent());
