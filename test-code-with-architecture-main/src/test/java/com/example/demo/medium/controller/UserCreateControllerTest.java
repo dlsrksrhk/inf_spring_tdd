@@ -1,4 +1,4 @@
-package com.example.demo.user.controller;
+package com.example.demo.medium.controller;
 
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.infrastructure.UserJpaRepository;

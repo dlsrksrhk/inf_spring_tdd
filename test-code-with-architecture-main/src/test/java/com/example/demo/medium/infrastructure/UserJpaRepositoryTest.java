@@ -1,7 +1,8 @@
-package com.example.demo.user.infrastructure;
+package com.example.demo.medium.infrastructure;
 
 import com.example.demo.user.domain.UserEntity;
 import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.infrastructure.UserJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         @Sql(value = "/sql/user-repo-test-data.sql"),
         @Sql(value = "/sql/delete-all-test-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })
-class UserRepositoryTest {
+class UserJpaRepositoryTest {
 
     @Autowired
     private UserJpaRepository userJpaRepository;
