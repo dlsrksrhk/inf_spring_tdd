@@ -2,11 +2,12 @@ package com.example.demo.medium.service;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.user.controller.port.*;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserUpdate;
-import com.example.demo.user.service.UserService;
+import com.example.demo.user.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,13 @@ import static org.mockito.ArgumentMatchers.any;
 class UserServiceTest {
 
     @Autowired
-    private UserService userService;
+    private UserCreateService userCreateService;
+    @Autowired
+    private UserReadService userReadService;
+    @Autowired
+    private UserUpdateService userUpdateService;
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @MockBean
     private JavaMailSender mailSender;
@@ -38,7 +45,7 @@ class UserServiceTest {
     @Test
     void getById은_Active_상태의_사용자를_가져온다() {
         Long id = 1000L;
-        User result = userService.getById(id);
+        User result = userReadService.getById(id);
         assertThat(result.getId()).isEqualTo(id);
         assertThat(result.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
@@ -46,14 +53,14 @@ class UserServiceTest {
     @Test
     void getById은_Active가_아닌_사용자를_가져오면_예외를던진다() {
         Long id = 1001L;
-        assertThatThrownBy(() -> userService.getById(id))
+        assertThatThrownBy(() -> userReadService.getById(id))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test
     void getByEmail은_Active_상태의_사용자를_가져온다() {
         String email = "test@naver.com";
-        User result = userService.getByEmail(email);
+        User result = userReadService.getByEmail(email);
         assertThat(result.getEmail()).isEqualTo(email);
         assertThat(result.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
@@ -61,7 +68,7 @@ class UserServiceTest {
     @Test
     void getByEmail은_Active가_아닌_사용자를_가져오면_예외를던진다() {
         String email = "test2@naver.com";
-        assertThatThrownBy(() -> userService.getByEmail(email))
+        assertThatThrownBy(() -> userReadService.getByEmail(email))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -76,7 +83,7 @@ class UserServiceTest {
 
         BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
 
-        User result = userService.create(userCreate);
+        User result = userCreateService.create(userCreate);
 
         assertThat(result.getId()).isNotNull();
         assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
@@ -92,7 +99,7 @@ class UserServiceTest {
                 .nickname("테스트3")
                 .build();
 
-        User result = userService.update(1000L, userUpdate);
+        User result = userUpdateService.update(1000L, userUpdate);
 
         assertThat(result.getId()).isNotNull();
         assertThat(result.getAddress()).isEqualTo(userUpdate.getAddress());
@@ -101,25 +108,25 @@ class UserServiceTest {
 
     @Test
     void 로그인시키면_마지막_로그인_시간이_변경된다() {
-        userService.login(1000L);
+        authenticationService.login(1000L);
 
-        User result = userService.getById(1000L);
+        User result = userReadService.getById(1000L);
         assertThat(result.getId()).isNotNull();
         assertThat(result.getLastLoginAt()).isGreaterThan(0L);
     }
 
     @Test
     void 인증상태가_PENDING인_사용자는_인증코드로_ACTIVE_시킬수있다() {
-        userService.verifyEmail(1001L, "BBBBB-aaaaa-aaaaaaaa");
+        authenticationService.verifyEmail(1001L, "BBBBB-aaaaa-aaaaaaaa");
 
-        User result = userService.getById(1001L);
+        User result = userReadService.getById(1001L);
         assertThat(result.getId()).isNotNull();
         assertThat(result.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
     @Test
     void 인증코드가_맞지않으면_인증에_실패하고_예외가발생한다() {
-        assertThatThrownBy(() -> userService.verifyEmail(1001L, "xxxxx-aaaaa-aaaaaaab"))
+        assertThatThrownBy(() -> authenticationService.verifyEmail(1001L, "xxxxx-aaaaa-aaaaaaab"))
                 .isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 
