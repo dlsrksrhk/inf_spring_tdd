@@ -2,7 +2,10 @@ package com.example.demo.mock;
 
 import com.example.demo.common.service.port.ClockHolder;
 import com.example.demo.common.service.port.UuidHolder;
+import com.example.demo.post.controller.PostController;
+import com.example.demo.post.controller.PostCreateController;
 import com.example.demo.post.controller.port.PostService;
+import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.service.PostServiceImpl;
 import com.example.demo.post.service.port.PostRepository;
 import com.example.demo.user.controller.UserController;
@@ -28,6 +31,8 @@ public class TestContainer {
     public final CertificationServiceImpl certificationService;
     public final UserController userController;
     public final UserCreateController userCreateController;
+    public final PostController postController;
+    public final PostCreateController postCreateController;
 
     private TestContainer(ClockHolder clockHolder, UuidHolder uuidHolder) {
         this.mailSender = new FakeMailSender();
@@ -47,7 +52,7 @@ public class TestContainer {
         this.postService = PostServiceImpl.builder()
                 .postRepository(postRepository)
                 .userRepository(userRepository)
-                .clockHolder(new TestClockHolder(1698765432L))
+                .clockHolder(clockHolder)
                 .build();
 
         this.userController = UserController.builder()
@@ -59,6 +64,13 @@ public class TestContainer {
 
         this.userCreateController = UserCreateController.builder()
                 .userCreateService(userCreateService)
+                .build();
+
+        this.postController = PostController.builder()
+                .postService(postService)
+                .build();
+        this.postCreateController = PostCreateController.builder()
+                .postService(postService)
                 .build();
     }
 
